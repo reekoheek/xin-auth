@@ -6,6 +6,7 @@
     "Ganesha <reekoheek@gmail.com>"
   ],
   "description": "xin auth",
+  "main": "xin-auth.html",
   "license": "MIT",
   "ignore": [
     "**/.*",
