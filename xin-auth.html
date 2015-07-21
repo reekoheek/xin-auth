@@ -1,0 +1,125 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/xin-app/container-behavior.html">
+
+<script type="text/javascript">
+(function(root) {
+  'use strict';
+
+  Polymer({
+    is: 'xin-auth',
+
+    behaviors: [xin.ContainerBehavior],
+
+    attached: function() {
+      this.async(function() {
+        this.app$.use(function() {
+          return this.check(this.app$.getURI());
+        }.bind(this));
+
+        this.app$.route('/logout', function() {
+          return this.logout();
+        }.bind(this));
+
+        this.addEventListener('login', function(evt) {
+          if (!evt.promisedResult) {
+            evt.promisedResult = Promise.resolve(evt.detail);
+          }
+
+          evt.promisedResult = evt.promisedResult
+            .then(function(me) {
+              if (me) {
+                this.write('$$auth', me);
+                this.fire('success-login');
+              } else {
+                this.fire('fail-login');
+              }
+            }.bind(this));
+        });
+
+        this.addEventListener('success-login', function(evt) {
+          if (!evt.promisedResult) {
+            evt.promisedResult = Promise.resolve(evt.detail);
+          }
+
+          evt.promisedResult = evt.promisedResult
+            .then(function() {
+              this.$home();
+            }.bind(this));
+        });
+
+        this.addEventListener('success-logout', function(evt) {
+          if (!evt.promisedResult) {
+            evt.promisedResult = Promise.resolve(evt.detail);
+          }
+
+          evt.promisedResult = evt.promisedResult
+            .then(function() {
+              this.$home();
+            }.bind(this));
+        });
+      });
+    },
+
+    properties: {
+
+      redirectUri: {
+        type: String,
+        value: '/login'
+      },
+
+      excludes: {
+        type: Array,
+        value: function() {
+          return ['/login'];
+        }
+      }
+    },
+
+    check: function(uri) {
+      if (this.excludes.indexOf(uri) === -1) {
+        if (!this.$$auth) {
+          this.app$.navigate(this.redirectUri);
+          throw new Error('Unauthorized ' + uri);
+        }
+      }
+    },
+
+    addAdapter: function(type, adapter) {
+      this.adapters = this.adapters || [];
+      this.adapters[type] = adapter;
+    },
+
+    removeAdapter: function(type) {
+      this.adapters = this.adapters || [];
+      delete this.adapters[type];
+    },
+
+    getAdapter: function(type) {
+      try {
+        return this.adapters[type];
+      } catch(err) {
+        throw new Error('Adapter ' + type + ' not found!');
+      }
+    },
+
+    login: function(type) {
+      return this.getAdapter(type).login()
+        .then(function(me) {
+          me.type = type;
+          this.fire('login', me);
+        }.bind(this));
+    },
+
+    logout: function() {
+      return new Promise(function(resolve, reject) {
+
+        this.write('$$auth', null);
+
+        this.fire('success-logout');
+
+        resolve();
+      }.bind(this));
+    }
+  });
+})(this);
+</script>
