@@ -31,6 +31,7 @@
         var fbOptions = {
           appId: this.appId,
           scope: this.scope,
+          tokenStore: localStorage,
         };
 
         if (this.parentElement.authUrl) {

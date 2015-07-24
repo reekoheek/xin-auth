@@ -28,7 +28,7 @@
           evt.promisedResult = evt.promisedResult
             .then(function(me) {
               if (me) {
-                this.write('$$auth', me);
+                this.set('$$auth', me);
                 this.fire('success-login');
               } else {
                 this.fire('fail-login');
@@ -72,6 +72,11 @@
         value: function() {
           return ['/login'];
         }
+      },
+
+      $$auth: {
+        type: Object,
+        notify: true
       }
     },
 
@@ -113,7 +118,7 @@
     logout: function() {
       return new Promise(function(resolve, reject) {
 
-        this.write('$$auth', null);
+        this.set('$$auth', null);
 
         this.fire('success-logout');
 
