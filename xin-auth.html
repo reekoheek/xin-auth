@@ -1,14 +1,33 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/xin-app/container-behavior.html">
+<link rel="import" href="../xin/xin.html">
+<link rel="import" href="../xin/container-behavior.html">
 
 <script type="text/javascript">
 (function(root) {
   'use strict';
 
-  Polymer({
+  xin.Component({
     is: 'xin-auth',
 
-    behaviors: [xin.ContainerBehavior],
+    behaviors: ['xin.ContainerBehavior'],
+
+    properties: {
+      redirectUri: {
+        type: String,
+        value: '/login'
+      },
+
+      excludes: {
+        type: Array,
+        value: function() {
+          return ['/login'];
+        }
+      },
+
+      $$auth: {
+        type: Object,
+        notify: true
+      }
+    },
 
     attached: function() {
       this.async(function() {
@@ -58,26 +77,6 @@
             }.bind(this));
         });
       });
-    },
-
-    properties: {
-
-      redirectUri: {
-        type: String,
-        value: '/login'
-      },
-
-      excludes: {
-        type: Array,
-        value: function() {
-          return ['/login'];
-        }
-      },
-
-      $$auth: {
-        type: Object,
-        notify: true
-      }
     },
 
     check: function(uri) {
