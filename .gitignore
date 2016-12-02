@@ -1,2 +1,8 @@
-/*.sublime-*
-bower_components
+# development specific
+*.sublime-*
+
+# modules
+node_modules
+
+# os specific
+.DS_Store

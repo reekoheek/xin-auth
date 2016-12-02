@@ -1,3 +1,9 @@
-# xin-auth
+# ss-auth
 
-> WARNING! This component might not work properly for newer xin2
+Support cordova
+
+## Google
+```
+cordova plugin add cordova-plugin-googleplus --save # ver 5.1.1
+cordova plugin add cordova-plugin-facebook4 --save  # ver 1.7.4
+```
