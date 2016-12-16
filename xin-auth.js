@@ -35,10 +35,11 @@ class XinAuth extends xin.Component {
     }
 
     if (this.provider in ADAPTERS === false) {
-      ADAPTERS[this.provider] = (await Promise.all([
+      let providerModules = await Promise.all([
         System.import('./lib/' + this.provider + '/web-auth'),
         System.import('./lib/' + this.provider + '/cordova-auth'),
-      ])).map(adapter => adapter.default);
+      ]);
+      ADAPTERS[this.provider] = providerModules.map(adapter => adapter.default);
     }
 
     this.auth = new ADAPTERS[this.provider][await isCordova() ? 1 : 0](this.options);
@@ -50,11 +51,10 @@ class XinAuth extends xin.Component {
     let auth = await this.getAuthAsync();
 
     if (await auth.isSignedIn()) {
-      return true;
+      return;
     }
 
     await auth.signIn();
-    return true;
   }
 
   async getProfile () {
