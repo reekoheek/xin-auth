@@ -12,7 +12,7 @@
     "eslint-plugin-standard": "^2.0.1"
   },
   "dependencies": {
-    "xin": "xinix-technology/xin#next",
+    "xin": "xinix-technology/xin#2.3.1",
     "xin-cordova": "reekoheek/xin-cordova"
   }
 }
